@@ -15,9 +15,6 @@ def instrument_check(orders_dict, instruments_dict):
        if val.instrument in instruments_dict.keys()
     }
 
-    print("instrument")
-    print(res.keys())
-
     return res
 
 def currency_check(orders_dict, instruments_dict, clients_dict):
@@ -36,8 +33,6 @@ def currency_check(orders_dict, instruments_dict, clients_dict):
         if instrument_currency in order_currencies:
             res[key] = value
          
-    print("currency")
-    print(res.keys())
     return res
 
 def lot_size_check(orders_dict, instruments_dict):
@@ -53,8 +48,6 @@ def lot_size_check(orders_dict, instruments_dict):
         if quantity % lot_size == 0:
             res[key] = value
 
-    print("lotsize")
-    print(res.keys())
     return res
 
 def position_check(orders_dict, positions_dict, clients_dict):
@@ -88,8 +81,6 @@ def position_check(orders_dict, positions_dict, clients_dict):
             else:
                 res[key] = value
 
-    print("position")
-    print(res.keys())
     return res
 
 def validate_all(orders_dict, positions_dict, clients_dict, instruments_dict):
