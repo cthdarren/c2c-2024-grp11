@@ -20,3 +20,9 @@ class Client:
         self.currencies = currencies 
         self.positioncheck = positioncheck
         self.rating = rating
+
+class ClientInstrument:
+    def __init__(self, instrumentId, clientId, position):
+        self.instrumentId = instrumentId
+        self.clientId = clientId
+        self.position = position
