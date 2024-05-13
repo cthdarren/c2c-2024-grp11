@@ -24,14 +24,20 @@ exchange_report = "OrderID, RejectionReason\n"
 client_report = "ClientID, InstrumentID, NetPosition\n"
 instrument_report = "InstrumentID, OpenPrice, ClosePrice, TotalVolume, VWAP, DayHigh, DayLow\n"
 
+
 siaBook = Book(instruments, orders, clients, "SIA")
 result_single = []
-for x in orders.values():
-    tempres = validate_all_single(x, position_dict, clients, instruments)
+for curr_order in orders.values():
+    tempres = validate_all_single(curr_order, position_dict, clients, instruments)
     if tempres != True:
-        exchange_report += x.orderId + "," + tempres + "\n"
+        exchange_report += curr_order.orderId + "," + tempres + "\n"
     else:
-        siaBook.insert_order(x)
+        # if curr_order.time < "9" > "9:30":
+        #     siaBook.insert_order(curr_order)
+        # elif curr_order.time < "16:00" > "9:30":
+        #     siaBook.insert_order(curr_order)
+        #     #excecute
+        # else:
 
 for x in position_dict:
     print(x + ": ", end = "")
