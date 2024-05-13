@@ -1,5 +1,6 @@
 from parsing import getClients, getInstruments, getOrders
-from validate import currency_check, instrument_check, lot_size_check, validate_all
+from validate import currency_check, instrument_check, lot_size_check, validate_all, validate_all_single
+from classes import Order
 
 clients = getClients("datasets/input_clients.csv")
 instruments = getInstruments("datasets/input_instruments.csv")
@@ -17,7 +18,16 @@ for client in clients:
 
 
 # test cases
+result_single = []
+for x in orders.values():
+    result_single.append(validate_all_single(x, position_dict, clients, instruments))
+print(result_single)
+
 valid_orders = validate_all(orders, position_dict, clients, instruments)
 print(list(valid_orders.keys()))
 
-assert list(valid_orders.keys()) == ['A1', 'B1', 'C1', 'E1', 'A2', 'B3', 'C3', 'B4', 'E2', 'B5', 'C4', 'B6', 'A3', 'E3']
+assert validate_all_single(Order("Z1", "09:00:00", "A", "SIA", "Buy", "Market", "101"), position_dict, clients, instruments) == False
+assert validate_all_single(Order("Z2", "09:02:00", "A", "SIA", "Buy", "Market", "1000"), position_dict, clients, instruments) == True 
+assert validate_all_single(Order("Z3", "09:03:00", "A", "SIA", "Sell", "Market", "101"), position_dict, clients, instruments) == False
+assert validate_all_single(Order("Z4", "09:04:00", "B", "SIA", "Sell", "Market", "100"), position_dict, clients, instruments) == True
+assert validate_all_single(Order("Z5", "09:05:00", "A", "SIA", "Sell", "Market", "100"), position_dict, clients, instruments) == False

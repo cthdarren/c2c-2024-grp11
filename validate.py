@@ -83,10 +83,77 @@ def position_check(orders_dict, positions_dict, clients_dict):
 
     return res
 
+# split poilcy checks into 4 different functions that check 4 different policies
+def instrument_check_single(order, instruments_dict):
+
+    # takes in order and instruments CSV
+    return order.instrument in instruments_dict.keys()
+
+def currency_check_single(order, instruments_dict, clients_dict):
+    # assuming we take in res from instrument_check as orders_dict
+    # takes in orders, clients and instruments CSV
+    # Checks if the client's currency is correct for the instrument
+
+    res = {}
+
+    instrument = order.instrument # get instrument field from orders csv
+    client = order.client # get client field from orders csv
+    instrument_currency = instruments_dict[instrument].currency # get instrument currency
+    client_currencies = clients_dict[client].currencies # get list of client currencies
+    
+    return instrument_currency in client_currencies
+         
+
+def lot_size_check_single(order, instruments_dict):
+    # takes in orders, and instruments CSV
+    # checks if the order's order size is a multiple of the lot size ie modulo = 0
+
+    res = {}
+
+    quantity = int(order.quantity)
+    instrument = order.instrument
+    lot_size = int(instruments_dict[instrument].lotSize)
+
+    return quantity % lot_size == 0
+
+def position_check_single(order, positions_dict, clients_dict):
+    # everyone starts with 0
+    # only N position check can short sell
+    # Y position check must have enough
+    # assume we have the positions dictionary
+    
+    # first check if Y or N. if Y then we check if has enough qty
+    # if N then we check qty
+    # return all those valid in a dict
+
+    def amount_check_single(positions_dict, clientId, sell_amount):
+        # remember positions dict is a simple dictionary not object of objects
+        if positions_dict[clientId] < int(sell_amount):
+            return False
+        return True
+
+    client = order.client
+    sell_amount = order.quantity
+    
+    if clients_dict[client].positioncheck == "N":
+        return True
+    elif clients_dict[client].positioncheck == "Y":
+        if order.side == "Sell":
+            return amount_check_single(positions_dict, client, sell_amount)
+        else:
+            return True
+
+    # invalid positioncheck value
+    return False
+
+
 def validate_all(orders_dict, positions_dict, clients_dict, instruments_dict):
     orders_dict = instrument_check(orders_dict, instruments_dict)
     orders_dict = currency_check(orders_dict, instruments_dict, clients_dict)
     orders_dict = lot_size_check(orders_dict, instruments_dict)
-    initialize_dict(orders_dict)
     orders_dict = position_check(orders_dict, positions_dict, clients_dict)
     return orders_dict
+
+def validate_all_single(order, positions_dict, clients_dict, instruments_dict):
+    return instrument_check_single(order, instruments_dict) and currency_check_single(order, instruments_dict, clients_dict) and lot_size_check_single(order,instruments_dict) and position_check_single(order, positions_dict, clients_dict)
+
