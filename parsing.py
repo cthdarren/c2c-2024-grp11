@@ -1,3 +1,5 @@
+from classes import Client, Instrument, Order
+
 def getClients(filename):
     clientsDict = {}
     clientsfile = open(filename)
@@ -16,11 +18,6 @@ def getClients(filename):
             positioncheck = position_and_rating[1]
             rating = position_and_rating[2].replace("\n","")
 
-            clientsDict[clientId] = {
-                "currencies": currencies,
-                "positioncheck": positioncheck,
-                "rating": rating
-            }
         else:
             clientarray = clientline.split(",")
 
@@ -29,12 +26,10 @@ def getClients(filename):
             positioncheck = clientarray[2]
             rating = clientarray[3].replace("\n","")
 
-            clientsDict[clientId] = {
-                "currencies": currencies,
-                "positioncheck": positioncheck,
-                "rating": rating
-            }
-        return clientsDict
+        clientsDict[clientId] = Client(clientId, currencies, positioncheck, rating)
+
+    clientsDict["A"]
+    return clientsDict
 
 def getOrders(filename):
     ordersDict = {} 
@@ -55,14 +50,8 @@ def getOrders(filename):
         price = orderarray[5]
         side = orderarray[6].replace("\n","")
 
-        ordersDict[orderId] = {
-            "orderTime": ordertime,
-            "clientId": clientId,
-            "instrument": instrument,
-            "side": side,
-            "price": price,
-            "quantity": qty 
-        }
+        ordersDict[orderId] = Order(orderId, ordertime, clientId, instrument, side, price, qty)
+
     return ordersDict
 
 def getInstruments(filename):
@@ -79,8 +68,5 @@ def getInstruments(filename):
         currency = instrumentarray[1]
         lotSize = instrumentarray[2].replace("\n","")
 
-        instrumentsDict[instrumentId] = {
-            "currency": currency, 
-            "lotsize": lotSize
-        }
+        instrumentsDict[instrumentId] = Instrument(instrumentId, currency, lotSize)
     return instrumentsDict
