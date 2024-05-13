@@ -1,5 +1,6 @@
 from parsing import getClients, getInstruments, getOrders
-from validate import currency_check, instrument_check
+from validate import currency_check, instrument_check, lot_size_check
+from position_dictionary import position_dict
 
 clients = getClients("datasets/input_clients.csv")
 instruments = getInstruments("datasets/input_instruments.csv")
@@ -15,4 +16,9 @@ orders = getOrders("datasets/input_orders.csv")
 # print(instrument_check(orders, instruments))
 
 # example of check currency validation
-print(currency_check(orders, instruments, clients))
+# print(currency_check(orders, instruments, clients))
+
+# example of check lot size validation
+# print(lot_size_check(orders, instruments))
+
+
