@@ -31,10 +31,21 @@ def currency_check(orders_dict, instruments_dict, clients_dict):
          
     return res
 
-def lot_size_check():
+def lot_size_check(orders_dict, instruments_dict):
     # takes in orders, and instruments CSV
     # checks if the order's order size is a multiple of the lot size ie modulo = 0
-    pass
+
+    res = {}
+    
+    for key, value in orders_dict.items():
+        quantity = int(value["quantity"])
+        instrument = value["instrument"]
+        lot_size = instruments_dict[instrument]['lotSize']
+        
+        if quantity %  lot_size == 0 or quantity < lot_size:
+            res[key] = value
+
+    return res
 
 def position_check():
     # everyone starts with 0
