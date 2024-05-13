@@ -61,7 +61,68 @@ class Book:
                 self.LS.insert(order)
                 print(f"{vars(order)} inserted in Limit Sell")
                 
-    
+    def execute_cont(self,order,position_dict):
+        for MBorder in self.MB.queue:
+            # Check limit orders until MBorder quantity runs out
+            for LSorder in self.LS.queue:
+                if MBorder.quantity > LSorder.quantity: # Limit sell order is less than market buy
+                    # update MB order quantity
+                    MBorder.quantity = MBorder.quantity - LSorder.quantity 
+                    # update LS priority queue
+                    self.LS.queue.pop(0)
+                    # update position
+                    position_dict[MBorder.instrument][MBorder.client] += LSorder.quantity
+                    position_dict[MBorder.instrument][LSorder.client] -= LSorder.quantity
+
+                elif MBorder.quantity < LSorder.quantity:
+                    # update LS order quantity
+                    LSorder.quantity = LSorder.quantity - MBorder.quantity
+                    # update MB priority queue
+                    self.MB.queue.pop(0)
+                    # update position
+                    position_dict[MBorder.instrument][MBorder.client] += MBorder.quantity
+                    position_dict[MBorder.instrument][LSorder.client] -= MBorder.quantity
+                    
+                else: # equal
+                    # update MB priority queue
+                    self.MB.queue.pop(0)
+                    # update LS priority queue
+                    self.LS.queue.pop(0)
+                    # update position
+                    position_dict[MBorder.instrument][MBorder.client] += LSorder.quantity
+                    position_dict[MBorder.instrument][LSorder.client] -= LSorder.quantity
+                    
+        for MSorder in self.MS.queue:
+            # Check limit orders until MSorder quantity runs out
+            for LBorder in self.LB.queue:
+                if MSorder.quantity > LBorder.quantity: # Limit sell order is less than market buy
+                    # update MB order quantity
+                    MSorder.quantity = MSorder.quantity - LBorder.quantity 
+                    # update LS priority queue
+                    self.LB.queue.pop(0)
+                    # update position
+                    position_dict[MSorder.instrument][MSorder.client] += LBorder.quantity
+                    position_dict[MSorder.instrument][LBorder.client] -= LBorder.quantity
+
+                elif MSorder.quantity < LBorder.quantity:
+                    # update LB order quantity
+                    LSorder.quantity = LSorder.quantity - MBorder.quantity
+                    # update MS priority queue
+                    self.MS.queue.pop(0)
+                    # update position
+                    position_dict[MSorder.instrument][MSorder.client] += MSorder.quantity
+                    position_dict[MSorder.instrument][LBorder.client] -= MSorder.quantity
+                    
+                else: # equal
+                    # update MS priority queue
+                    self.MS.queue.pop(0)
+                    # update LB priority queue
+                    self.LB.queue.pop(0)
+                    # update position
+                    position_dict[MSorder.instrument][MSorder.client] += LBorder.quantity
+                    position_dict[MSorder.instrument][LBorder.client] -= LBorder.quantity
+                
+
 class PQueue:
     def __init__(self, sorting_func, clientDict):
         self.queue = []
