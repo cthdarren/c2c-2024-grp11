@@ -1,92 +1,11 @@
-clientsfile = open("datasets/input_clients.csv")
-instrumentsfile = open("datasets/input_instruments.csv")
-ordersfile = open("datasets/input_orders.csv")
+from parsing import getClients, getInstruments, getOrders
 
-clientDict = {}
-instrumentsDict = {}
-ordersDict = {} 
+clients = getClients("datasets/input_clients.csv")
+instruments = getInstruments("datasets/input_instruments.csv")
+orders = getOrders("datasets/input_orders.csv")
 
-firstLine = True
 
-for clientline in clientsfile.readlines():
-    if firstLine:
-        firstLine = False
-        continue
-    if "\"" in clientline:
-        clientarray = clientline.split("\"")
-        position_and_rating = clientarray[2].split(",")
-
-        clientId = clientarray[0]
-        currencies = clientarray[1].split(",")
-        positioncheck = position_and_rating[1]
-        rating = position_and_rating[2].replace("\n","")
-
-        clientDict[clientId] = {
-            "currencies": currencies,
-            "positioncheck": positioncheck,
-            "rating": rating
-        }
-    else:
-        clientarray = clientline.split(",")
-
-        clientId = clientarray[0]
-        currencies = clientarray[1].split(",")
-        positioncheck = clientarray[2]
-        rating = clientarray[3].replace("\n","")
-
-        clientDict[clientId] = {
-            "currencies": currencies,
-            "positioncheck": positioncheck,
-            "rating": rating
-        }
-
-firstLine = True
-for orderline in ordersfile.readlines():
-    if firstLine:
-        firstLine = False
-        continue
-    orderarray = orderline.split(",")
-
-    ordertime = orderarray[0]
-    orderId = orderarray[1]
-    instrument = orderarray[2]
-    qty = orderarray[3]
-    clientId = orderarray[4]
-    price = orderarray[5]
-    side = orderarray[6].replace("\n","")
-
-    ordersDict[orderId] = {
-        "orderTime": ordertime,
-        "clientId": clientId,
-        "instrument": instrument,
-        "side": side,
-        "price": price,
-        "quantity": qty 
-    }
-
-firstLine = True
-for instrumentline in instrumentsfile.readlines():
-    if firstLine:
-        firstLine = False
-        continue
-    instrumentarray = instrumentline.split(",")
-    print(instrumentline)
-
-    instrumentId = orderarray[0]
-    currency = orderarray[1]
-    lotSize = orderarray[2]
-    qty = orderarray[3]
-    clientId = orderarray[4]
-    price = orderarray[5]
-    side = orderarray[6].replace("\n","")
-
-    ordersDict[orderId] = {
-        "orderTime": ordertime,
-        "clientId": clientId,
-        "instrument": instrument,
-        "side": side,
-        "price": price,
-        "quantity": qty 
-    }
-
-print(ordersDict)
+# example of how to get data
+print(clients["A"]["currencies"])
+print(instruments["SIA"]["lotsize"])
+print(orders["A2"]["price"])
