@@ -21,10 +21,10 @@ def currency_check(orders_dict, instruments_dict, clients_dict):
     res = {}
 
     for key, value in orders_dict.items():
-        instrument = value["instrument"] # get instrument field from orders csv
-        client = value["clientId"] # get client field from orders csv
-        instrument_currency = instruments_dict[instrument]["currency"] # get instrument currency
-        order_currencies = clients_dict[client]["currencies"] # get list of client currencies
+        instrument = value.instrument # get instrument field from orders csv
+        client = value.clientId # get client field from orders csv
+        instrument_currency = instruments_dict[instrument].currency # get instrument currency
+        order_currencies = clients_dict[client].currencies # get list of client currencies
         
         if instrument_currency in order_currencies:
             res[key] = value
@@ -38,9 +38,9 @@ def lot_size_check(orders_dict, instruments_dict):
     res = {}
     
     for key, value in orders_dict.items():
-        quantity = int(value["quantity"])
-        instrument = value["instrument"]
-        lot_size = int(instruments_dict[instrument]['lotsize'])
+        quantity = int(value.quantity)
+        instrument = value.instrument
+        lot_size = int(instruments_dict[instrument].lotsize)
         
         if quantity % lot_size == 0 or quantity < lot_size:
             res[key] = value
@@ -67,12 +67,12 @@ def position_check(orders_dict, positions_dict, clients_dict):
         return True
 
     for key, value in orders_dict:
-        client = value["clientId"]
-        sell_amount = value["quantity"]
+        client = value.clientId
+        sell_amount = value.quantity
         
-        if clients_dict[client]["positioncheck"] == "N":
+        if clients_dict[client].positioncheck == "N":
             res[key] = value
-        elif clients_dict[client]["positioncheck"] == "Y":
+        elif clients_dict[client].positioncheck == "Y":
             if amount_check(positions_dict, client, sell_amount):
                 res[key] = value
     

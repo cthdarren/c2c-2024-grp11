@@ -11,4 +11,5 @@ orders = getOrders("datasets/input_orders.csv")
 print(clients["A"].clientId)
 print(instruments["SIA"].currency)
 print(orders["A2"].price)
+
 # example of how to get data
