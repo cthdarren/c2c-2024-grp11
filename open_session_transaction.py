@@ -45,3 +45,4 @@ def open_session2(Book):
             for item in Book.MB:
                 mkt_qty += item.quantity
             min_ls[price] += min(Book.LS.queue[0].quantity, mkt_qty)
+            
