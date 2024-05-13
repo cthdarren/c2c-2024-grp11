@@ -2,6 +2,8 @@
 # 2. validate the csv against each other
 # 3. put into 4 priority queues and return 
 
+from position_dictionary import position_dict, initialize_dict
+
 # split poilcy checks into 4 different functions that check 4 different policies
 def instrument_check(orders_dict, instruments_dict):
 
@@ -77,3 +79,12 @@ def position_check(orders_dict, positions_dict, clients_dict):
                 res[key] = value
     
     return res
+
+
+def validate_all(orders_dict, positions_dict, clients_dict, instruments_dict):
+    orders_dict = instrument_check(orders_dict, instruments_dict)
+    orders_dict = currency_check(orders_dict, instruments_dict, clients_dict)
+    orders_dict = lot_size_check(orders_dict, instruments_dict)
+    initialize_dict(orders_dict)
+    orders_dict = position_check(orders_dict, positions_dict, clients_dict)
+    return orders_dict
