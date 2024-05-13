@@ -26,3 +26,61 @@ class ClientInstrument:
         self.instrumentId = instrumentId
         self.clientId = clientId
         self.position = position
+
+class Book:
+    def __init__(self, instrumentDict, orderDict, clientDict, instrumentId):
+        self.instrument = instrumentDict[instrumentId]
+        self.orderDict = orderDict
+        self.clientDict = clientDict
+    
+    def create_queues(self, LS_sort=LS_sort, LB_sort=LB_sort, MS_sort=MS_sort, MB_sort=MB_sort):
+        self.LS = PQueue(LS_sort,self.clientDict)
+        self.LB = PQueue(LB_sort,self.clientDict)
+        self.MS = PQueue(MS_sort,self.clientDict)
+        self.MB = PQueue(MB_sort,self.clientDict)
+    
+    def insert_order(self,order):
+        if order.side == 'Buy':
+            if order.price == 'Market':
+                self.MB.insert(order)
+                print(f"{vars(order)} inserted in Market Buy")
+            else:
+                self.LB.insert(order)
+                print(f"{vars(order)} inserted in Limit Buy")
+        elif order.side == 'Sell':
+            if order.price == 'Market':
+                self.MS.insert(order)
+                print(f"{vars(order)} inserted in Market Sell")
+            else:
+                self.LS.insert(order)
+                print(f"{vars(order)} inserted in Limit Sell")
+                
+    
+class PQueue:
+    def __init__(self, sorting_func, clientDict):
+        self.queue = []
+        self.sort = sorting_func
+        self.clientDict = clientDict
+    
+    def insert(self, order):
+        self.queue.append(order)
+        self.queue = self.sort(self.queue,self.clientDict)
+        
+        
+def LS_sort(queue:list, clientDict) -> list:
+    return sorted(queue,key = lambda order:(float(order.price),
+                                            clientDict[order.client].rating,
+                                            datetime.strptime(order.time,'%H:%M:%S')))
+
+def LB_sort(queue:list,clientDict) -> list:
+    return sorted(queue,key = lambda order:(-float(order.price),
+                                            clientDict[order.client].rating,
+                                            datetime.strptime(order.time,'%H:%M:%S')))
+
+def MS_sort(queue:list,clientDict) -> list:
+    return sorted(queue,key = lambda order:(clientDict[order.client].rating,
+                                            datetime.strptime(order.time,'%H:%M:%S')))
+                  
+def MB_sort(queue:list,clientDict) -> list:
+    return sorted(queue,key = lambda order:(clientDict[order.client].rating,
+                                            datetime.strptime(order.time,'%H:%M:%S')))

@@ -1,6 +1,7 @@
 from parsing import getClients, getInstruments, getOrders
 from validate import currency_check, instrument_check, lot_size_check, validate_all, validate_all_single
 from classes import Order, ClientInstrument
+from datetime import datetime
 
 clients = getClients("datasets/input_clients.csv")
 instruments = getInstruments("datasets/input_instruments.csv")
