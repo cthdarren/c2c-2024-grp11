@@ -40,16 +40,40 @@ def lot_size_check(orders_dict, instruments_dict):
     for key, value in orders_dict.items():
         quantity = int(value["quantity"])
         instrument = value["instrument"]
-        lot_size = instruments_dict[instrument]['lotSize']
+        lot_size = int(instruments_dict[instrument]['lotsize'])
         
-        if quantity %  lot_size == 0 or quantity < lot_size:
+        if quantity % lot_size == 0 or quantity < lot_size:
             res[key] = value
 
     return res
 
-def position_check():
+def position_check(orders_dict, positions_dict, clients_dict):
     # everyone starts with 0
     # only N position check can short sell
     # Y position check must have enough
     # assume we have the positions dictionary
-    pass
+    
+    # first check if Y or N. if Y then we check if has enough qty
+    # if N then we check qty
+    # return all those valid in a dict
+
+    res = {}
+
+
+    def amount_check(positions_dict, clientId, sell_amount):
+        # remember positions dict is a simple dictionary not object of objects
+        if positions_dict[clientId] < sell_amount:
+            return False
+        return True
+
+    for key, value in orders_dict:
+        client = value["clientId"]
+        sell_amount = value["quantity"]
+        
+        if clients_dict[client]["positioncheck"] == "N":
+            res[key] = value
+        elif clients_dict[client]["positioncheck"] == "Y":
+            if amount_check(positions_dict, client, sell_amount):
+                res[key] = value
+    
+    return res
