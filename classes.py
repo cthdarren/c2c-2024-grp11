@@ -1,3 +1,5 @@
+from sorting import LS_sort, LB_sort, MS_sort, MB_sort 
+
 class Order:
     def __init__(self, orderId, time, client, instrument, side, price, quantity):
         self.orderId = orderId
@@ -32,6 +34,7 @@ class Book:
         self.instrument = instrumentDict[instrumentId]
         self.orderDict = orderDict
         self.clientDict = clientDict
+        self.create_queues()
     
     def create_queues(self, LS_sort=LS_sort, LB_sort=LB_sort, MS_sort=MS_sort, MB_sort=MB_sort):
         self.LS = PQueue(LS_sort,self.clientDict)
@@ -66,21 +69,3 @@ class PQueue:
         self.queue.append(order)
         self.queue = self.sort(self.queue,self.clientDict)
         
-        
-def LS_sort(queue:list, clientDict) -> list:
-    return sorted(queue,key = lambda order:(float(order.price),
-                                            clientDict[order.client].rating,
-                                            datetime.strptime(order.time,'%H:%M:%S')))
-
-def LB_sort(queue:list,clientDict) -> list:
-    return sorted(queue,key = lambda order:(-float(order.price),
-                                            clientDict[order.client].rating,
-                                            datetime.strptime(order.time,'%H:%M:%S')))
-
-def MS_sort(queue:list,clientDict) -> list:
-    return sorted(queue,key = lambda order:(clientDict[order.client].rating,
-                                            datetime.strptime(order.time,'%H:%M:%S')))
-                  
-def MB_sort(queue:list,clientDict) -> list:
-    return sorted(queue,key = lambda order:(clientDict[order.client].rating,
-                                            datetime.strptime(order.time,'%H:%M:%S')))

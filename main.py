@@ -1,6 +1,6 @@
 from parsing import getClients, getInstruments, getOrders
 from validate import currency_check, instrument_check, lot_size_check, validate_all, validate_all_single
-from classes import Order, ClientInstrument
+from classes import Order, ClientInstrument, Book
 from datetime import datetime
 
 clients = getClients("datasets/input_clients.csv")
@@ -24,11 +24,14 @@ exchange_report = "OrderID, RejectionReason\n"
 client_report = "ClientID, InstrumentID, NetPosition\n"
 instrument_report = "InstrumentID, OpenPrice, ClosePrice, TotalVolume, VWAP, DayHigh, DayLow\n"
 
+siaBook = Book(instruments, orders, clients, "SIA")
 result_single = []
 for x in orders.values():
     tempres = validate_all_single(x, position_dict, clients, instruments)
     if tempres != True:
         exchange_report += x.orderId + "," + tempres + "\n"
+    else:
+        siaBook.insert_order(x)
 
 for x in position_dict:
     print(x + ": ", end = "")
