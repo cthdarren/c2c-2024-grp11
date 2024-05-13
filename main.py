@@ -57,11 +57,36 @@ for orderline in ordersfile.readlines():
 
     ordersDict[orderId] = {
         "orderTime": ordertime,
-        "clientId": ordertime,
-        "instrument": ordertime,
+        "clientId": clientId,
+        "instrument": instrument,
         "side": side,
-        "price": ordertime,
-        "quantity": ordertime
+        "price": price,
+        "quantity": qty 
+    }
+
+firstLine = True
+for instrumentline in instrumentsfile.readlines():
+    if firstLine:
+        firstLine = False
+        continue
+    instrumentarray = instrumentline.split(",")
+    print(instrumentline)
+
+    instrumentId = orderarray[0]
+    currency = orderarray[1]
+    lotSize = orderarray[2]
+    qty = orderarray[3]
+    clientId = orderarray[4]
+    price = orderarray[5]
+    side = orderarray[6].replace("\n","")
+
+    ordersDict[orderId] = {
+        "orderTime": ordertime,
+        "clientId": clientId,
+        "instrument": instrument,
+        "side": side,
+        "price": price,
+        "quantity": qty 
     }
 
 print(ordersDict)
