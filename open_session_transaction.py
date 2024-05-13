@@ -31,6 +31,8 @@ def open_session(Book):
 def open_session2(Book):
     LB_price = [item.price for item in Book.LB]
     LS_price = [item.price for item in Book.LS]
+    
+    min_ls = {}
 
     prices = LB_price + LS_price
     prices = list(set(prices))     
@@ -42,4 +44,4 @@ def open_session2(Book):
             mkt_qty = 0
             for item in Book.MB:
                 mkt_qty += item.quantity
-            min(Book.LS.queue[0].quantity, mkt_qty)
+            min_ls[price] += min(Book.LS.queue[0].quantity, mkt_qty)
