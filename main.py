@@ -1,7 +1,5 @@
 from parsing import getClients, getInstruments, getOrders
-from classes import Client
-from validate import currency_check, instrument_check, lot_size_check
-from position_dictionary import position_dict
+from validate import currency_check, instrument_check, lot_size_check, validate_all
 
 clients = getClients("datasets/input_clients.csv")
 instruments = getInstruments("datasets/input_instruments.csv")
@@ -30,5 +28,11 @@ print(orders["A2"].price)
 # print(position_check(orders, position_dict, clients))
 
 # example 
+
+position_dict = {}
+
+for client in clients:
+    position_dict[client] = 0
+
 valid_orders = validate_all(orders, position_dict, clients, instruments)
-print(valid_orders)
+print(valid_orders.keys())

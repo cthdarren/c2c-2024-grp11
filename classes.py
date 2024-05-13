@@ -20,7 +20,3 @@ class Client:
         self.currencies = currencies 
         self.positioncheck = positioncheck
         self.rating = rating
-
-
-    def getClientId(self):
-        return self.clientId

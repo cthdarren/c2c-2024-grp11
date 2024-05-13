@@ -10,8 +10,10 @@ def instrument_check(orders_dict, instruments_dict):
     # takes in orders and instruments CSV
     # checks if the orders instruments field is in the instruments CSV
 
-    res = {key : val for key, val in orders_dict.items() 
-           if val["instrument"] in instruments_dict.keys()}
+    res = {
+       key : val for key, val in orders_dict.items() 
+       if val.instrument in instruments_dict.keys()
+    }
 
     return res
 
@@ -24,7 +26,7 @@ def currency_check(orders_dict, instruments_dict, clients_dict):
 
     for key, value in orders_dict.items():
         instrument = value.instrument # get instrument field from orders csv
-        client = value.clientId # get client field from orders csv
+        client = value.client # get client field from orders csv
         instrument_currency = instruments_dict[instrument].currency # get instrument currency
         order_currencies = clients_dict[client].currencies # get list of client currencies
         
@@ -42,7 +44,7 @@ def lot_size_check(orders_dict, instruments_dict):
     for key, value in orders_dict.items():
         quantity = int(value.quantity)
         instrument = value.instrument
-        lot_size = int(instruments_dict[instrument].lotsize)
+        lot_size = int(instruments_dict[instrument].lotSize)
         
         if quantity % lot_size == 0 or quantity < lot_size:
             res[key] = value
@@ -59,17 +61,17 @@ def position_check(orders_dict, positions_dict, clients_dict):
     # if N then we check qty
     # return all those valid in a dict
 
-    res = {}
-
-
     def amount_check(positions_dict, clientId, sell_amount):
         # remember positions dict is a simple dictionary not object of objects
-        if positions_dict[clientId] < sell_amount:
+
+        if positions_dict[clientId] < int(sell_amount):
             return False
         return True
 
-    for key, value in orders_dict:
-        client = value.clientId
+    res = {}
+
+    for key, value in orders_dict.items():
+        client = value.client
         sell_amount = value.quantity
         
         if clients_dict[client].positioncheck == "N":
