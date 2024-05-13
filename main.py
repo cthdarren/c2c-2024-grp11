@@ -40,21 +40,21 @@ for curr_order in orders.values():
         
         # Open auction
         if datetime.strptime(curr_order.time,'%H:%M:%S') >= datetime.strptime('9:00:00','%H:%M:%S') and datetime.strptime(curr_order.time,'%H:%M:%S') < datetime.strptime('9:30:00','%H:%M:%S'):
-            siaBook.insert_order(curr_order)  
+            instrument_books[curr_order.instrument].insert_order(curr_order)  
         
         # Continuous trading
         elif datetime.strptime(curr_order.time,'%H:%M:%S') < datetime.strptime('16:00:00','%H:%M:%S'):
             # Execute this for the first order in the continuous trading session
             if cont_trading == False: 
-                siaBook.execute_auction()
+                instrument_books[curr_order.instrument].execute_auction()
                 cont_trading = True
-            siaBook.insert_order(curr_order)
-            siaBook.execute_cont()
+            instrument_books[curr_order.instrument].insert_order(curr_order)
+            instrument_books[curr_order.instrument].execute_cont()
             
         # Close auction
         elif datetime.strptime(curr_order.time,'%H:%M:%S') < datetime.strptime('16:10:00','%H:%M:%S'):
-            siaBook.insert_order(curr_order)
-        siaBook.execute_auction()
+            instrument_books[curr_order.instrument].insert_order(curr_order)
+        instrument_books[curr_order.instrument].execute_auction()
 
 for instrument in position_dict:
     # print(instrument + ": ", end = "")
