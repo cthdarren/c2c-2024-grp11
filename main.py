@@ -28,18 +28,33 @@ instrument_report = "InstrumentID, OpenPrice, ClosePrice, TotalVolume, VWAP, Day
 
 
 result_single = []
+
+cont_trading = False
+
 for curr_order in orders.values():
     tempres = validate_all_single(curr_order, position_dict, clients, instruments)
     if tempres != True:
         exchange_report += curr_order.orderId + "," + tempres + "\n"
     else:
         instrument_books[curr_order.instrument].insert_order(curr_order)
-        # if curr_order.time < "9" > "9:30":
-        #     siaBook.insert_order(curr_order)
-        # elif curr_order.time < "16:00" > "9:30":
-        #     siaBook.insert_order(curr_order)
-        #     #excecute
-        # else:
+        
+        # Open auction
+        if datetime.strptime(curr_order.time,'%H:%M:%S') >= datetime.strptime('9:00:00','%H:%M:%S') and datetime.strptime(curr_order.time,'%H:%M:%S') < datetime.strptime('9:30:00','%H:%M:%S'):
+            siaBook.insert_order(curr_order)  
+        
+        # Continuous trading
+        elif datetime.strptime(curr_order.time,'%H:%M:%S') < datetime.strptime('16:00:00','%H:%M:%S'):
+            # Execute this for the first order in the continuous trading session
+            if cont_trading == False: 
+                siaBook.execute_auction()
+                cont_trading = True
+            siaBook.insert_order(curr_order)
+            siaBook.execute_cont()
+            
+        # Close auction
+        elif datetime.strptime(curr_order.time,'%H:%M:%S') < datetime.strptime('16:10:00','%H:%M:%S'):
+            siaBook.insert_order(curr_order)
+        siaBook.execute_auction()
 
 for x in position_dict:
     print(x + ": ", end = "")
