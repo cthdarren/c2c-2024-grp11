@@ -66,7 +66,12 @@ print(client_report)
 print(exchange_report)
 
 # writing files
-client_report_file = open("clients.csv", "a")
+exchange_report_file = open("output_exchange_report.csv", "w")
+exchange_report_file.write(exchange_report)
+client_report_file = open("output_client_report.csv", "w")
+client_report_file.write(client_report)
+instrument_report_file = open("output_instrument_report.csv", "w")
+instrument_report_file.write(instrument_report)
 
 # test cases
 # valid_orders = validate_all(orders, position_dict, clients, instruments)
