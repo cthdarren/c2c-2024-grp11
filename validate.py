@@ -15,6 +15,9 @@ def instrument_check(orders_dict, instruments_dict):
        if val.instrument in instruments_dict.keys()
     }
 
+    print("instrument")
+    print(res.keys())
+
     return res
 
 def currency_check(orders_dict, instruments_dict, clients_dict):
@@ -33,6 +36,8 @@ def currency_check(orders_dict, instruments_dict, clients_dict):
         if instrument_currency in order_currencies:
             res[key] = value
          
+    print("currency")
+    print(res.keys())
     return res
 
 def lot_size_check(orders_dict, instruments_dict):
@@ -45,10 +50,11 @@ def lot_size_check(orders_dict, instruments_dict):
         quantity = int(value.quantity)
         instrument = value.instrument
         lot_size = int(instruments_dict[instrument].lotSize)
-        
-        if quantity % lot_size == 0 or quantity < lot_size:
+        if quantity % lot_size == 0:
             res[key] = value
 
+    print("lotsize")
+    print(res.keys())
     return res
 
 def position_check(orders_dict, positions_dict, clients_dict):
@@ -63,7 +69,6 @@ def position_check(orders_dict, positions_dict, clients_dict):
 
     def amount_check(positions_dict, clientId, sell_amount):
         # remember positions dict is a simple dictionary not object of objects
-
         if positions_dict[clientId] < int(sell_amount):
             return False
         return True
@@ -77,9 +82,14 @@ def position_check(orders_dict, positions_dict, clients_dict):
         if clients_dict[client].positioncheck == "N":
             res[key] = value
         elif clients_dict[client].positioncheck == "Y":
-            if amount_check(positions_dict, client, sell_amount):
+            if value.side == "Sell":
+                if amount_check(positions_dict, client, sell_amount):
+                    res[key] = value
+            else:
                 res[key] = value
-    
+
+    print("position")
+    print(res.keys())
     return res
 
 def validate_all(orders_dict, positions_dict, clients_dict, instruments_dict):

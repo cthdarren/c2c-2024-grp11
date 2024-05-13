@@ -35,4 +35,6 @@ for client in clients:
     position_dict[client] = 0
 
 valid_orders = validate_all(orders, position_dict, clients, instruments)
-print(valid_orders.keys())
+print(list(valid_orders.keys()))
+
+assert list(valid_orders.keys()) == ['A1', 'B1', 'C1', 'E1', 'A2', 'B3', 'C3', 'B4', 'E2', 'B5', 'C4', 'B6', 'A3', 'E3']
