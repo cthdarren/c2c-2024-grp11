@@ -155,5 +155,13 @@ def validate_all(orders_dict, positions_dict, clients_dict, instruments_dict):
     return orders_dict
 
 def validate_all_single(order, positions_dict, clients_dict, instruments_dict):
-    return instrument_check_single(order, instruments_dict) and currency_check_single(order, instruments_dict, clients_dict) and lot_size_check_single(order,instruments_dict) and position_check_single(order, positions_dict, clients_dict)
+    if instrument_check_single(order, instruments_dict) == False:
+        return "REJECTED - INSTRUMENT NOT FOUND"
+    if currency_check_single(order, instruments_dict, clients_dict) == False:
+        return "REJECTED - MISMATCH CURRENCY"
+    if lot_size_check_single(order,instruments_dict) == False:
+        return "REJECTED - INVALID LOT SIZE"
+    if position_check_single(order, positions_dict, clients_dict) == False:
+        return "REJECTED - POSITION CHECK FAILED"
+    return True
 

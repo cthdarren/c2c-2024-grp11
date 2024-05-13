@@ -16,13 +16,15 @@ position_dict = {}
 for client in clients:
     position_dict[client] = 0
 
-
+exchange_report = "OrderID, RejectionReason\n"
 # test cases
 result_single = []
 for x in orders.values():
-    result_single.append(validate_all_single(x, position_dict, clients, instruments))
-print(result_single)
+    tempres = validate_all_single(x, position_dict, clients, instruments)
+    if tempres != True:
+        exchange_report += x.orderId + "," + tempres + "\n"
 
+print(exchange_report)
 valid_orders = validate_all(orders, position_dict, clients, instruments)
 print(list(valid_orders.keys()))
 
