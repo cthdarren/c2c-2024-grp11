@@ -41,10 +41,17 @@ for curr_order in orders.values():
         #     #excecute
         # else:
 
-for x in position_dict:
-    print(x + ": ", end = "")
-    print(position_dict[x])
+for instrument in position_dict:
+    # print(instrument + ": ", end = "")
+    curr_instr_positions = position_dict[instrument]
+    for client in curr_instr_positions.items():
+        client_report += client[0] + "," + instrument + "," + str(client[1]) + "\n"
+
+print(client_report)
 print(exchange_report)
+
+# writing files
+client_report_file = open("clients.csv", "a")
 
 # test cases
 # valid_orders = validate_all(orders, position_dict, clients, instruments)

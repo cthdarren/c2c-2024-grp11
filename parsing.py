@@ -28,7 +28,6 @@ def getClients(filename):
 
         clientsDict[clientId] = Client(clientId, currencies, positioncheck, rating)
 
-    clientsDict["A"]
     return clientsDict
 
 def getOrders(filename):
