@@ -44,6 +44,8 @@ class Book:
         self.MB = PQueue(MB_sort,self.clientDict)
     
     def insert_order(self,order):
+        if order.instrument != self.instrument.instrumentId:
+            return 
         if order.side == 'Buy':
             if order.price == 'Market':
                 self.MB.insert(order)
