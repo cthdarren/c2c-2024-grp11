@@ -53,7 +53,7 @@ for orderline in ordersfile.readlines():
     qty = orderarray[3]
     clientId = orderarray[4]
     price = orderarray[5]
-    side = orderarray[6]
+    side = orderarray[6].replace("\n","")
 
     ordersDict[orderId] = {
         "orderTime": ordertime,
