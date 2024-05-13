@@ -26,18 +26,22 @@
 # (cell 12)
 # add at the same price / just add another row bruh
 
-def add_order(new_order):
+from classes import Book
+from validate import validate_all_single
+
+def add_order(new_order, positions_dict, clients_dict, instruments_dict):
     # validate order function if pass then 
     # add row to the book
-    # Book.insert_order(new_order)
+    validate_all_single(new_order, positions_dict, clients_dict, instruments_dict)
+    Book.insert_order(new_order)
 
 def time_check(new_order):
     if time_past 1600 hours:
         return False
     return True
 
-def process_order(new_order):
-    add_order(new_order)
+def process_order(new_order, positions_dict, clients_dict, instruments_dict):
+    add_order(new_order, positions_dict, clients_dict, instruments_dict)
     time_pass = time_check(new_order)
     # check if ask price more than bid prices, if it is do nothing
     if !time_pass:
