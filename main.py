@@ -13,8 +13,10 @@ print(instruments["SIA"].currency)
 print(orders["A2"].price)
 
 position_dict = {}
+instrument_books = {}
 
 for instrument in instruments:
+    instrument_books[instrument] = Book(instruments, orders, clients, "SIA")
     temp = {}
     for client in clients:
         temp[client] = 0
@@ -25,13 +27,13 @@ client_report = "ClientID, InstrumentID, NetPosition\n"
 instrument_report = "InstrumentID, OpenPrice, ClosePrice, TotalVolume, VWAP, DayHigh, DayLow\n"
 
 
-siaBook = Book(instruments, orders, clients, "SIA")
 result_single = []
 for curr_order in orders.values():
     tempres = validate_all_single(curr_order, position_dict, clients, instruments)
     if tempres != True:
         exchange_report += curr_order.orderId + "," + tempres + "\n"
     else:
+        instrument_books[curr_order.instrument].insert_order(curr_order)
         # if curr_order.time < "9" > "9:30":
         #     siaBook.insert_order(curr_order)
         # elif curr_order.time < "16:00" > "9:30":
