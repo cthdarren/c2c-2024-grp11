@@ -108,8 +108,6 @@ def lot_size_check_single(order, instruments_dict):
     # takes in orders, and instruments CSV
     # checks if the order's order size is a multiple of the lot size ie modulo = 0
 
-    res = {}
-
     quantity = int(order.quantity)
     instrument = order.instrument
     lot_size = int(instruments_dict[instrument].lotSize)
@@ -126,20 +124,21 @@ def position_check_single(order, positions_dict, clients_dict):
     # if N then we check qty
     # return all those valid in a dict
 
-    def amount_check_single(positions_dict, clientId, sell_amount):
+    def amount_check_single(positions_dict, instrument, clientId, sell_amount):
         # remember positions dict is a simple dictionary not object of objects
-        if positions_dict[clientId] < int(sell_amount):
+        if positions_dict[instrument][clientId] < int(sell_amount):
             return False
         return True
 
     client = order.client
     sell_amount = order.quantity
+    instrument= order.instrument
     
     if clients_dict[client].positioncheck == "N":
         return True
     elif clients_dict[client].positioncheck == "Y":
         if order.side == "Sell":
-            return amount_check_single(positions_dict, client, sell_amount)
+            return amount_check_single(positions_dict, instrument, client, sell_amount)
         else:
             return True
 
